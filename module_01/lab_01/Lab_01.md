@@ -140,10 +140,181 @@ Look at the order of the code!
 
 Had we been following the normal code order it would have run "badmovie" BEFORE it ran the print statement. But it didn't do that. Why not?
 
-## CHALLENGE TWO: Reorder the code so that we show the print statement BEFORE we show the results of the goroutine code
+### CHALLENGE TWO
 
-## CHALLENGE THREE: Write a different program utilizing a goroutine. Work out sleep times. 
+#### Reorder the code so that we show the print statement BEFORE we show the results of the goroutine code
 
-### GO PATTERNS ON CONCURRENCY
+### CHALLENGE THREE
 
+#### Write a different program utilizing a goroutine. Work out sleep times
+
+## GO PATTERNS ON CONCURRENCY
+
+Okay- so obviously if we want to utilize goroutines we'll need to work out a pattern in order to properly utilize these goroutines. 
+Let's add another twist in here and see what happens when we we do multiple go routines in a single "main" call (reference is [here](https://www.youtube.com/watch?v=u5k_arVcqR8) ifyou also like terrible movies)
+
+```
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func badlinereading(line string) {
+	for i := 0; i < 3; i++ {
+		fmt.Println(line, ":", i)
+	}
+}
+
+func main() {
+
+	badlinereading("oh God")
+	go badlinereading("oh Man")
+
+	go func(msg string) {
+		fmt.Println(msg)
+	}("Oh NO")
+
+	time.Sleep(time.Second)
+	fmt.Println("FIN")
+}
+```
+
+![toughguys](./images/toughguys.jpg)
+
+Okay- so what is it you all anticipate seeing come out of this? 
+What order do you think we'll see the prints come out?
+Why do you think it came out like that? 
+
+![why](./images/why.png)
+
+Now let's look at what happens when we create two go routines. To keep it interesting let's see if we can create a scenario where we can create to goroutines that are alternating between each other. Something like this: 
+
+```
+
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func badlinereading(line string) {
+	for i := 0; i < 3; i++ {
+		time.Sleep(101 * time.Millisecond)
+		fmt.Println(line, ":", i)
+	}
+}
+
+func badlinereadingtwo(otherline string) {
+	for i := 0; i < 3; i++ {
+		time.Sleep(200 * time.Millisecond)
+		fmt.Println(otherline, ":", i)
+	}
+}
+
+func main() {
+
+	go badlinereading("oh God")
+	go badlinereadingtwo("oh Man")
+
+	go func(msg string) {
+		time.Sleep(500 * time.Millisecond)
+		fmt.Println(msg)
+	}("Oh NO")
+
+	time.Sleep(time.Second)
+	fmt.Println("FIN")
+}
+```
+
+Do you see how things are mixing up with GOROUTINES? 
+Do you see how they are fundamentally **asynchronous**? Where we don't have a TON of control over the order that things happen? 
+
+The best we can do here is fundamentally mess around with the time.Sleep() to try to manipulate this. 
+OBVIOUSLY this is not ideal....I mean...what's the point of utilizing these goroutines if we constantly have to slow things down in order to do things? 
+
+### CHALLENGE FOUR
+
+#### Can you get the goroutines set up to alternate using timing?
+
+So here's another way to show that:
+
+```
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func numbers() {
+	for i := 1; i <= 5; i++ {
+		time.Sleep(250 * time.Millisecond)
+		fmt.Printf("%d ", i)
+	}
+}
+func alphabets() {
+	for i := 'a'; i <= 'e'; i++ {
+		time.Sleep(400 * time.Millisecond)
+		fmt.Printf("%c ", i)
+	}
+}
+func main() {
+	go numbers()
+	go alphabets()
+	time.Sleep(3000 * time.Millisecond)
+	fmt.Println("main terminated")
+}
+```
+
+Here's what's going on:
+
+![explanation](./images/explanation.png)
+
+## Channels
+
+So obviously we need a good way to manage these goroutines. 
+It's a pain in the backside using SLEEP all the time...so let's instead look at using communications channels. This is in keeping with the philosophy behind golang of **Do not communicate by sharing memory; instead, share memory by communicating.**
+
+Let's start by looking at the way channels are set up. The <- operator specifies the channel direction, send or receive. If no direction is given, the channel is bi-directional.
+Basically this is how goroutines communicate with each other. Let's start with a basic example (from go-by-example):
+
+```
+// _Channels_ are the pipes that connect concurrent
+// goroutines. You can send values into channels from one
+// goroutine and receive those values into another
+// goroutine.
+
+package main
+
+import "fmt"
+
+func main() {
+
+	// Create a new channel with `make(chan val-type)`.
+	// Channels are typed by the values they convey.
+	messages := make(chan string)
+
+	// _Send_ a value into a channel using the `channel <-`
+	// syntax. Here we send `"ping"`  to the `messages`
+	// channel we made above, from a new goroutine.
+	go func() { messages <- "ping" }()
+
+	// The `<-channel` syntax _receives_ a value from the
+	// channel. Here we'll receive the `"ping"` message
+	// we sent above and print it out.
+	msg := <-messages
+	fmt.Println(msg)
+}
+```
+Okay- so simple, right? We are: 
+
+* Creating a channel (`make` command)
+* Using a goroutine we're going to send a message to that command (`ping`)
+* A variable (`msg`) is used to receive that data and...
+* We print that variable.
+
+SO
 
