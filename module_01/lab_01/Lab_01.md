@@ -373,4 +373,16 @@ func main() {
 }
 ```
 
-See? We need a way to get that data in and fortunately a good **goroutine** is just the thing!
+See? We need a way to get that data in and fortunately a good **goroutine** is just the thing! The goroutines will act as consumers for the channels because, again, channels are how goroutines communicate.
+In the above example we're sending the person out of the room carrying the telephone (the channel) and then sending him/her a message ("Lisa"). Since there is someone to answer the phone we can get back to work and continue on! 
+If no one answers the phone and you have to sit there and let it ring waiting for someone to answer we get....**deadlock!**
+
+![phoneringing](./images/phoneringing.jpeg)
+
+Please NOTE that if you don't utilize a goroutine (i.e: send someone out of the room) then you have no need of the phone and nothing will happen!
+
+### CHALLENGE SIX
+
+#### Create a function that passes an int and a string through a channel to two separate goroutines. Set them up so they do a call and repeat of "Samurai" followed by "Cop" and repeat it three times!
+
+## Buffered Channels
