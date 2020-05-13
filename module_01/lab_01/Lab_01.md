@@ -316,5 +316,61 @@ Okay- so simple, right? We are:
 * A variable (`msg`) is used to receive that data and...
 * We print that variable.
 
-SO
+So...the big question here is: **why did the goroutine have time to finish?**
 
+As we've seen in previous examples- GOROUTINES are creating a second person, asking them to do something, watching them leave the room, and then continuing to do stuff on the "main" thread. 
+
+IF you finish stuff on the "main" thread then you end up finishing the system, leaving the room, and turning out the lights before the goroutine (fake person) has time to finish doing it's thing. 
+
+BUT...what if you had.... a telephone? AND...what if you COULDN'T leave the room until that phone rang? What if you could say to your fake "goroutine" person "call me when you're done doing your thing. I won't leave the room until you're done".
+That's channels. 
+Channels are **blocking**...meaning that they won't let the main thread finish doing it's thing until the channel has finished SO...we end up waiting for a call. Let's demonstrate this with a **deadlock** below:
+
+```
+package main
+
+import "fmt"
+
+func main() {
+  fmt.Println("Okay let's go!")
+  c:= make(chan string)
+  c <- "Lisa"
+  fmt.Println("You're tearing me apaaaht!")
+}
+```
+
+So what happened there? 
+Well- we sent the word "Lisa" to our channel which took that word and..... kind of just hung out. 
+It really isn't doing anything WHILST simultaneously blocking the main thread from running.
+SO...not doing much but stopping other people from working. 
+It's basically like, well...
+
+![theoffice](./images/theoffice.jpg)
+
+So okay fine...so let's allow it to _do_ something.
+
+### CHALLENGE FIVE
+
+#### "FIX" the channels issue so that we no longer have deadlock! (HINT: try passing the channel into the function)
+
+So one way to do this is to simply empty the channel. It doesn't need to be emptied anywhere in particular..you just need to empty is so...
+
+```
+package main
+
+import "fmt"
+
+func tearmeapart(c chan string){ 
+	<-c
+}
+
+func main() {
+  fmt.Println("Okay let's go!")
+  c:= make(chan string)
+  go tearmeapart(c)
+  c <- "Lisa"	
+  fmt.Println("You're tearing me apaaaht!")
+}
+```
+
+See? We need a way to get that data in and fortunately a good **goroutine** is just the thing!
