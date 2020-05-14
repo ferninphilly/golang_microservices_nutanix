@@ -481,4 +481,113 @@ Try to imagine managing multiple lines of these goroutines simultaneously would 
 
 ![twilight](./images/twilight.jpeg)
 
-At this point please go to the **challenges** folder and try out some challenges before we move on to concurrency patterns in Lab 2.
+At this point please go to the **challenges** folder and try out some challenges before we move on to concurrency patterns in Lab 2. These are intentionally difficult because I want you to feel the pain of trying to manage multiple goroutines simultaneously even _with_ channels. This pain is necessary before we get into **WAITGROUPS**
+
+### SELECT statements and Infinite Loops
+
+For this section we're going to take a quick look at SELECT statements and how they can work with infinite loops to provide another way that channels can become **non-blocking** on your main thread! 
+SO...let's look at creating an infinite loop.
+If you're not familiar with this concept in go we create an infinite loop with a simple `for{}` statement; so instead of `for i := range x` we instead simply say `for`  which opens up an infinite loop.
+We break out of `for` loops with either the `break` keyword or, of course, `return` keywords...the latter of which will also exit the function.
+Now let's talk SELECT function. Simply put:
+`The select statement lets a goroutine wait on multiple communication operations.`
+
+SO...quick example:
+
+```
+import "fmt"
+
+func fibonacci(c, quit chan int) {
+	x, y := 0, 1
+	for {
+		select {
+		case c <- x:
+			x, y = y, x+y
+		case <-quit:
+			fmt.Println("quit")
+			return
+		}
+	}
+}
+
+func main() {
+	c := make(chan int)
+	quit := make(chan int)
+	go func() {
+		for i := 0; i < 10; i++ {
+			fmt.Println(<-c)
+		}
+		quit <- 0
+	}()
+	fibonacci(c, quit)
+}
+```
+
+So let's talk through what's happening here. Obviously...fibonacci sequence...which we are all likely familiar with. SO..let's walk through this!
+
+I want everyone to pay particularly close attention to _how we are using a single goroutine to take inputs from multiple channels here_. This is a key concept to understand. 
+
+### CHALLENGE SIX: Create a goroutine that accepts data from multiple channels in an infinite loop using the SELECT keyword and decides when to quit based on those. Please make it say "troll troll troll troll troll troll troll nilbog"
+
+![troll2](./images/troll2.jpeg)
+
+Here's another interesting question: _What do you suppose would happen if we just did a `select{}` statement??_
+
+Please explain what is happening here? Why the exit?
+
+```
+// Go program to illustrate the 
+// concept of select statement 
+package main 
+
+import("fmt"
+"time") 
+	
+	// function 1 
+	func portal1(channel1 chan string) { 
+
+		time.Sleep(300*time.Millisecond) 
+		channel1 <- "Welcome to channel 1"
+	} 
+	
+	// function 2 
+	func portal2(channel2 chan string) { 
+
+		time.Sleep(900*time.Millisecond) 
+		channel2 <- "Welcome to channel 2"
+	} 
+
+// main function 
+func main(){ 
+	
+	// Creating channels 
+R1:= make(chan string) 
+R2:= make(chan string) 
+	
+// calling function 1 and 
+// function 2 in goroutine 
+go portal1(R1) 
+go portal2(R2) 
+
+select{ 
+
+		// case 1 for portal 1 
+	case op1:= <- R1: 
+	fmt.Println(op1) 
+
+	// case 2 for portal 2 
+	case op2:= <- R2: 
+	fmt.Println(op2) 
+} 
+	
+} 
+
+```
+
+Hint: _take a look at for loops_
+
+Okay! Grab yourselves a beer and relax because we are DONE with Module ONE!! 
+In the next module we're going to discuss MUCH more elegant ways to handle multiple goroutines AND we're going to go through atomic work. 
+PLEASE CONTINUE ON TO THE CHALLENGES FOLDERS NOW AND COMPLETE THEM!!
+
+![finished](./finished.jpg)
