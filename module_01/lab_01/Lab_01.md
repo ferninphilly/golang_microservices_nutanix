@@ -383,6 +383,102 @@ Please NOTE that if you don't utilize a goroutine (i.e: send someone out of the 
 
 ### CHALLENGE SIX
 
-#### Create a function that passes an int and a string through a channel to two separate goroutines. Set them up so they do a call and repeat of "Samurai" followed by "Cop" and repeat it three times!
+#### Create a function that passes an int and a string through a channel to two separate goroutines. Set them up so they do a call and repeat of "Samurai" followed by "Cop" and repeat it three times! So the output should be "Samurai", "Cop", "Samurai", "Cop", etc...
 
 ## Buffered Channels
+
+Another thing we can consider with channels is that we can set the size. This is the equivalent of "call waiting" on our example; basically we can send calls in and have them on "hold" waiting for people to answer them (making channels act like a queue). 
+Making buffered channels is relatively simple. To make a buffered channel we simply do: `make(chan {type}, {size of buffer})`
+
+So let's run a quick and very basic example here:
+
+```
+package main
+
+import "fmt"
+
+func main() {
+
+    messages := make(chan string, 2)
+
+    messages <- "Troll"
+    messages <- "Part 2"
+
+    fmt.Println(<-messages)
+    fmt.Println(<-messages)
+}
+```
+
+ALSO notice that we do __not__ have to dump our message into a variable to print it.
+SO- to quote an article: 
+
+***Buffered channels are useful when you know how many goroutines you have launched, want to limit the number of goroutines you will launch, or want to limit the amount of work that is queued up.***
+
+Another big consideration with buffered channels is that unlike unbuffered channels- buffered channels __do not block until they are full__. Let's do a quick example of that here:
+
+```
+package main
+
+import (  
+    "fmt"
+    "time"
+)
+
+func write(ch chan int) {  
+    for i := 0; i < 5; i++ {
+        ch <- i
+        fmt.Println("successfully wrote", i, "to ch")
+    }
+    close(ch)
+}
+func main() {  
+    ch := make(chan int, 2)
+    go write(ch)
+    time.Sleep(2 * time.Second)
+    for v := range ch {
+        fmt.Println("read value", v,"from ch")
+        time.Sleep(2 * time.Second)
+
+    }
+}
+```
+I didn't get cute with the movie references here because I want everyone to really understand the pattern that is happening (you can run that in the GO playground). 
+**NOW** please go back and remove the "2" from the `make(chan int,2)` line (line 16 on the go playground) and try that again. What happens now? 
+Now run this (I turned the loop up to 10 and the buffer up to 4):
+
+```
+package main
+
+import (  
+    "fmt"
+    "time"
+)
+
+func write(ch chan int) {  
+    for i := 0; i < 10; i++ {
+        ch <- i
+        fmt.Println("successfully wrote", i, "to ch")
+    }
+    close(ch)
+}
+func main() {  
+    ch := make(chan int,4)
+    go write(ch)
+    time.Sleep(2 * time.Second)
+    for v := range ch {
+        fmt.Println("read value", v,"from ch")
+        time.Sleep(2 * time.Second)
+
+    }
+}
+```
+
+Do you see what is happening with the buffered channels? They BLOCK when you have only a single value channel but then when you have a 4 value buffer they cease blocking while they fill up and then slowly drain out! 
+
+Okay! SO...we've got the first part of the basic understanding done. In the next lab we're going to be addressing one of the biggest challenges around managing these things. 
+
+Try to imagine managing multiple lines of these goroutines simultaneously would be, as you can imagine, a bit of a nightmare. 
+
+![twilight](./images/twighlight.jpeg)
+
+At this point please go to the **challenges** folder and try out some challenges before we move on to concurrency patterns in Lab 2.
