@@ -479,6 +479,6 @@ Okay! SO...we've got the first part of the basic understanding done. In the next
 
 Try to imagine managing multiple lines of these goroutines simultaneously would be, as you can imagine, a bit of a nightmare. 
 
-![twilight](./images/twighlight.jpeg)
+![twilight](./images/twilight.jpeg)
 
 At this point please go to the **challenges** folder and try out some challenges before we move on to concurrency patterns in Lab 2.
