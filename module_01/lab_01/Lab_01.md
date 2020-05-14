@@ -590,4 +590,4 @@ Okay! Grab yourselves a beer and relax because we are DONE with Module ONE!!
 In the next module we're going to discuss MUCH more elegant ways to handle multiple goroutines AND we're going to go through atomic work. 
 PLEASE CONTINUE ON TO THE CHALLENGES FOLDERS NOW AND COMPLETE THEM!!
 
-![finished](./finished.jpg)
+![finished](./images/finished.jpg)
