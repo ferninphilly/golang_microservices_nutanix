@@ -586,6 +586,65 @@ select{
 
 Hint: _take a look at for loops_
 
+One final note here...and this is important: **the select statement is a blocking statement EXCEPT when it has a default case**
+
+So let's address that: Let's look at this code here:
+
+```
+package main
+
+import (
+"fmt"
+"time"
+)
+
+var start time.Time
+
+func init() {
+	start = time.Now()
+	}
+	
+func service1(c chan string){
+	fmt.Println("Starting First Service()")
+	c <- "Here comes Service ONE"
+}
+
+func service2(c chan string){
+	fmt.Println("Starting Second Service()")
+	c <- "Here comes service TWO"
+}
+
+func main() {
+	fmt.Println("Hello I am the main thread", time.Since(start))
+	
+	chan1 := make(chan string)
+	chan2 := make(chan string)
+	
+	go service1(chan1)
+	go service2(chan2)
+	
+	select {
+	case res := <-chan1:
+		fmt.Println("Response from service 1", res, time.Since(start))
+	case res := <-chan2:
+		fmt.Println("Response from service 2", res, time.Since(start))
+	default:
+		fmt.Println("No response received", time.Since(start))
+}
+	fmt.Println("Okay- Main thread is all done!", time.Since(start))
+}
+
+```
+
+Try running that in the GO playground. What happens? 
+Did you get the default? Okay..
+
+So here is the question: **WHY ISN'T THAT WORKING??**
+
+And here's a challenge: 
+
+### CHALLENGE SEVEN: MAKE THE ABOVE CODE PRINT OUT THE VARIABLES WITHOUT DELETING THE DEFAULT VALUE (HINT: time.Sleep)
+
 Okay! Grab yourselves a beer and relax because we are DONE with Module ONE!! 
 In the next module we're going to discuss MUCH more elegant ways to handle multiple goroutines AND we're going to go through atomic work. 
 PLEASE CONTINUE ON TO THE CHALLENGES FOLDERS NOW AND COMPLETE THEM!!
