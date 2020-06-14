@@ -28,4 +28,20 @@ Open up a command line editor and type in `docker info`. If you get a bunch of s
 
 Now that we're set up for success let's get started!
 
+## MINUKUBE
+
+We'll also need minukube set up locally. You can find instructions [here](https://kubernetes.io/docs/tasks/tools/install-minikube/).
+
+Once you have done the setup run the following command on your command line: 
+
+If you have previously installed Minikube, and run:
+
+`minikube start`
+
+and minikube start returned an error:
+
+`machine does not exist`
+then you need to clear minikube's local state:
+
+`minikube delete`
 

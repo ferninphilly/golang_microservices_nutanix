@@ -8,7 +8,7 @@ Fortunately there's the **sync** package which helps with that.
 
 Let's take a look at the following code:
 
-```
+```golang
 // To wait for multiple goroutines to finish, we can
 // use a *wait group*.
 
@@ -56,7 +56,7 @@ func main() {
 So what's happening here? Well- let's start with the "main()" section. 
 This line `var wg sync.WaitGroup` basically creates a "group" of helpers. To go back to our "guy hanging out in a room" analogy- the "waitgroup" is kind of like a bunch of uniforms that you created. SO...with a bunch of uniforms the next thing we need is...workers! Let's create FIVE of them...which we're going to do here:
 
-```
+```golang
 	for i := 1; i <= 5; i++ {
 		wg.Add(1)
 		go worker(i, &wg)
@@ -92,6 +92,8 @@ So let's move on to challenge ONE:
 ### CHALLENGE ONE: Create a goroutine pattern that utilizes a workgroup to launch enough workers to http.GET data from three separate websites simultaneously. Print the results out to your command line. Those sites are: ["www.google.com", "www.yahoo.com", "www.imdb.com"]
 
 ## CONCURRENCY PATTERNS IN GOLANG
+
+![workers](./images/workers.jpeg)
 
 So let's get into concurrency patterns in Golang.
 
@@ -297,6 +299,7 @@ func main() {
     }
 }
 ```
+
 
 Now run this in the go playground. How did this end up looking? 
 Did things come in out of order? Why is that? Remember the workers....
