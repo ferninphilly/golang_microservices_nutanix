@@ -309,3 +309,48 @@ Did things come in out of order? Why is that? Remember the workers....
 ![promises](./images/promises.jpg)
 
 Anyone who has done asynchronous coding in NODE.JS or any other asynchronous language is used to the concept of "promises" in code. This is asynchronous running of an item in the background with the "promise" to return the item once the main thread needs it. **THIS** is the real power of using channels in golang...essentially you can run items "in the background" and pick them up "when needed". Considering this _our first and most basic concurrency pattern is **promises**.
+
+So in NODE you might have something like this:
+
+```javascript
+const longRunningTask = async () => {
+    // Simulate a workload.
+    sleep(3000)
+    return Math.floor(Math.random() * Math.floor(100))
+}
+
+const r = await longRunningTask()
+console.log(r)
+```
+
+Which can be rewritten in GOLANG like this:
+
+```golang
+package main
+
+import (
+	"fmt"
+        "math/rand"
+	"time"
+)
+
+func longRunningTask() <-chan int32 {
+	r := make(chan int32)
+
+	go func() {
+		defer close(r)
+		
+		// Simulate a workload.
+		time.Sleep(time.Second * 3)
+		r <- rand.Int31n(100)
+	}()
+
+	return r
+}
+
+func main() {
+	r := <-longRunningTask()
+	fmt.Println(r)
+}
+
+```
