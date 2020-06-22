@@ -244,7 +244,7 @@ Let's run using this command: `minikube service html-deployment`
 
 Excellent! Is everything running? 
 
-[nicework](./images/nicework.jpeg)
+![nicework](./images/nicework.jpeg)
 
 
 ## Controlling Your Deployment Replications
@@ -310,7 +310,7 @@ Let's delete everything we've made with:
 
 So...outside of the "oh S*#&!" scenario outlined above...sometimes you might want to plan for these events. Fortunately there's a relatively easy way to handle this.
 
-[failure](./images/failure.jpg)
+![failure](./images/failure.jpg)
 
 So let's set up a load test and win!
 The first thing we'll need to do is a quick ADD ON.
@@ -382,11 +382,11 @@ NOW...let's give this a minute of nonstop requests (are you getting a lot of "OK
 
 `while true; do wget -q -O- http://php-apache; done`
 
-[okay](./images/okay.png)
+![okay](./images/okay.png)
 
 Now let's STOP FOR FIVE MINUTES (these things take time!)
 
-[pencilsdown](./images/pencilsdown.png)
+![pencilsdown](./images/pencilsdown.png)
 
 All right...now that 5 minutes have gone by let's see what's going on...
 
@@ -411,7 +411,7 @@ php-apache   6/10    10           6           4h16m
 
 Finally- let's run a `kubectl get pods` to see all of our pods running....
 
-[flex](./images/flex.jpg)
+![flex](./images/flex.jpg)
 
 Okay...that should do it here. Clean up time!
 

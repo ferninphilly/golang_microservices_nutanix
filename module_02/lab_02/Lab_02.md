@@ -221,6 +221,7 @@ func fanIn(input1, input2 <-chan string) <-chan string {
     return c
 }
 ```
+
 Now- what is happening here? Let's talk through that...
 
 And then add this to main:
