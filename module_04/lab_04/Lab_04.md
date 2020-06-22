@@ -8,7 +8,7 @@ Go into your command line and type in `docker-compose -v`
 IF you do not get back a version we'll need to install!
 Head [here](https://docs.docker.com/compose/install/) to install docker-compose.
 
-[readytogo](./images/readytogo.jpeg)
+![readytogo](./images/readytogo.jpeg)
 
 ### Basic Docker Compose
 
@@ -35,7 +35,7 @@ OKAY...we're ready to go. Notice that we're forwarding the port from `8000:80` i
 Let's `cd` into our **/module_04/lab_04/basic-docker-compose** directory and run our `docker-compose up` (we could also do a `-d` there to run it in the background but in the short term let's just go with this version). 
 Once everything is up run a `localhost:8000` in your favourite browser and you should see something like...
 
-[wordpress](./images/wordpress.png)
+![wordpress](./images/wordpress.png)
 
 Now- clearly we have a MYSQL back end and a wordpress front end. If we want to see these running locally we can run `docker container ls` and we should see:
 
