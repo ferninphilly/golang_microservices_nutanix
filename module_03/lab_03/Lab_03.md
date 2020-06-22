@@ -1,4 +1,4 @@
-# Multi Stage Deployments with Golang
+# Multi Stage and Concurrent Deployments with Golang
 
 ## Creating a multi stage deployment
 
